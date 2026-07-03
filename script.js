@@ -7,6 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
   updateHydration();
 });
 
+// --- Tab Navigation Logic ---
+function switchTab(tabId) {
+  // Hide all panes and remove active class from all buttons
+  document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // Show target pane and add active class to clicked button
+  document.getElementById(tabId).classList.add('active');
+  document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+}
+
 // --- Theme & Storage Logic ---
 
 function loadSettings() {
@@ -14,17 +25,14 @@ function loadSettings() {
   const savedHydration = localStorage.getItem('pizzaHydration');
   const savedTheme = localStorage.getItem('theme');
 
-  // Restore quantity if exists
   if (savedQty) {
     document.getElementById('numPizzas').value = savedQty;
   }
 
-  // Restore hydration if exists
   if (savedHydration) {
     document.getElementById('hydrationSlider').value = savedHydration;
   }
 
-  // Restore dark mode if it was toggled on
   if (savedTheme === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
     document.getElementById('darkModeToggle').checked = true;
@@ -57,7 +65,6 @@ function updateHydration() {
   const sliderVal = document.getElementById('hydrationSlider').value;
   document.getElementById('hydrationVal').innerText = sliderVal + '%';
   
-  // Update Dynamic Helper Text
   const h = parseInt(sliderVal);
   let helpText = "";
   
@@ -72,7 +79,6 @@ function updateHydration() {
   }
   
   document.getElementById('hydrationHelp').innerText = helpText;
-
   calculate();
 }
 
@@ -93,7 +99,6 @@ function calculate() {
   let num = parseInt(document.getElementById('numPizzas').value);
   let targetHydration = parseInt(document.getElementById('hydrationSlider').value) / 100;
   
-  // Save settings whenever a calculation runs
   saveSettings();
   
   if (isNaN(num) || num < 1) {
@@ -102,7 +107,6 @@ function calculate() {
     return; 
   }
 
-  // Mathematical Rules
   const targetBallWeight = 250;
   const saltPerPizza = 4;
   const flourWaterWeightPerPizza = targetBallWeight - saltPerPizza; 
@@ -118,7 +122,6 @@ function calculate() {
   const totalWaterPrecise = totalWaterPerPizza * num;
   const pFlourPrecise = poolishFlourPerPizza * num;
 
-  // Final Rounded Ingredient Weights
   const pFlour = Math.round(pFlourPrecise);
   const pWater = pFlour; 
   
@@ -129,7 +132,6 @@ function calculate() {
   const dWater = totalWater - pWater;
   const dSalt = saltPerPizza * num;
 
-  // Yeast & Honey Rules
   let pYeast = 5;
   if (num === 1) {
     pYeast = 2;
@@ -140,11 +142,9 @@ function calculate() {
   }
   let pHoney = (num === 1) ? 2 : 5;
 
-  // Totals
   const displayHydration = ((totalWater / totalFlour) * 100).toFixed(1);
   const totalWeight = pWater + pFlour + pYeast + pHoney + dWater + dFlour + dSalt;
 
-  // Build the Text String for Clipboard
   clipboardText = `Pizza dough recipe (${num}x 250g balls @ ${displayHydration}% hydration)\n\n` +
     `1. Poolish:\n` +
     `- Water: ${pWater}g\n` +
@@ -160,7 +160,6 @@ function calculate() {
     `- Total water: ${totalWater}g\n` +
     `- Total weight: ${totalWeight}g`;
 
-  // Build the UI HTML
   let html = `
     <div class="recipe-section">
       <h2>1. Poolish</h2>

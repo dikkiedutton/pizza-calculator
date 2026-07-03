@@ -21,25 +21,66 @@
 <div class="container">
   <h1>Dikkie's pizza dough calculator</h1>
   
-  <div class="form-group">
-    <div class="hydration-header">
-      <label for="hydrationSlider" style="margin-bottom: 0;">Hydration level</label>
-      <span id="hydrationVal">67%</span>
-    </div>
-    <input type="range" id="hydrationSlider" min="55" max="70" value="67" step="1" oninput="updateHydration()">
-    <div id="hydrationHelp" class="help-text"></div>
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('calculator')">Calculator</button>
+    <button class="tab-btn" onclick="switchTab('method')">Method</button>
   </div>
 
-  <div class="form-group">
-    <label for="numPizzas">Quantity of pizzas</label>
-    <div class="quantity-wrapper">
-      <button type="button" class="qty-btn" onclick="adjustQty(-1)">-</button>
-      <input type="number" id="numPizzas" placeholder="How many?" min="1" oninput="calculate()">
-      <button type="button" class="qty-btn" onclick="adjustQty(1)">+</button>
+  <!-- Calculator Tab -->
+  <div id="calculator" class="tab-pane active">
+    <div class="form-group">
+      <div class="hydration-header">
+        <label for="hydrationSlider" style="margin-bottom: 0;">Hydration level</label>
+        <span id="hydrationVal">67%</span>
+      </div>
+      <input type="range" id="hydrationSlider" min="55" max="70" value="67" step="1" oninput="updateHydration()">
+      <div id="hydrationHelp" class="help-text"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="numPizzas">Quantity of pizzas</label>
+      <div class="quantity-wrapper">
+        <button type="button" class="qty-btn" onclick="adjustQty(-1)">-</button>
+        <input type="number" id="numPizzas" placeholder="How many?" min="1" oninput="calculate()">
+        <button type="button" class="qty-btn" onclick="adjustQty(1)">+</button>
+      </div>
+    </div>
+
+    <div id="results">
+      <!-- JavaScript will populate this section -->
     </div>
   </div>
 
-  <!-- Settings toggles -->
+  <!-- Method Tab -->
+  <div id="method" class="tab-pane">
+    <div class="method-step">
+      <h3>1. Prepare the poolish</h3>
+      <p>Mix the poolish water, flour, yeast, and honey in a container. Let it rest at room temperature for 1 hour, then move it to the fridge for 16 to 24 hours.</p>
+    </div>
+    
+    <div class="method-step">
+      <h3>2. Mix the main dough</h3>
+      <p>Take the poolish out of the fridge. Add the main dough water, flour, and salt. Knead thoroughly until it forms a smooth, cohesive dough.</p>
+    </div>
+
+    <div class="method-step">
+      <h3>3. Bulk rest</h3>
+      <p>Cover the dough and let it rest at room temperature for about 1 hour to relax the gluten.</p>
+    </div>
+
+    <div class="method-step">
+      <h3>4. Ball up</h3>
+      <p>Divide the dough and shape into tight 250g balls. Place them in a proofing box or cover them tightly to prevent drying out.</p>
+    </div>
+
+    <div class="method-step">
+      <h3>5. Final proof</h3>
+      <p>Let the dough balls rest at room temperature for 1 to 2 hours until they have relaxed and expanded, then stretch and bake.</p>
+    </div>
+  </div>
+
+  <!-- Universal Settings toggles -->
   <div class="settings-group">
     <div class="toggle-container">
       <label for="darkModeToggle">Dark mode</label>
@@ -58,9 +99,6 @@
     </div>
   </div>
 
-  <div id="results">
-    <!-- JavaScript will populate this section -->
-  </div>
 </div>
 
 <!-- Link to external JS -->

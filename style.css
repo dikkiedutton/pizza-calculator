@@ -10,6 +10,7 @@
   --totals-bg: #f1f3f5;
   --switch-bg: #ccc;
   --btn-active: #e2e6ea;
+  --tab-inactive: #f8f9fa;
 }
 
 /* Dark Theme Variables */
@@ -23,6 +24,7 @@
   --totals-bg: #2a2a2a;
   --switch-bg: #555555;
   --btn-active: #333333;
+  --tab-inactive: #2a2a2a;
 }
 
 body {
@@ -50,6 +52,61 @@ h1 {
   margin-top: 0;
   margin-bottom: 25px;
 }
+
+/* Tab Navigation CSS */
+.tab-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 15px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  background-color: var(--tab-inactive);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+.tab-pane {
+  display: none;
+}
+.tab-pane.active {
+  display: block;
+}
+
+/* Method Steps CSS */
+.method-step {
+  margin-bottom: 15px;
+  padding: 15px 20px;
+  background: var(--recipe-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+.method-step h3 {
+  margin-top: 0;
+  color: var(--primary);
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+.method-step p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -236,10 +293,7 @@ li:last-child {
   margin-bottom: 0;
   cursor: pointer;
   font-weight: normal;
-  font-size: 0.95rem; /* Slightly smaller to ensure they fit side-by-side on small phone screens */
-}
-.toggle-container:last-child {
-  margin-bottom: 0;
+  font-size: 0.95rem;
 }
 .switch {
   position: relative;
