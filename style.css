@@ -1,0 +1,279 @@
+:root {
+  /* Light Theme Variables */
+  --primary: #e63946;
+  --background: #f8f9fa;
+  --card-bg: #ffffff;
+  --text: #333333;
+  --border: #dee2e6;
+  --help-text: #666666;
+  --recipe-bg: #fdfdfd;
+  --totals-bg: #f1f3f5;
+  --switch-bg: #ccc;
+  --btn-active: #e2e6ea;
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --background: #121212;
+  --card-bg: #1e1e1e;
+  --text: #e0e0e0;
+  --border: #333333;
+  --help-text: #aaaaaa;
+  --recipe-bg: #242424;
+  --totals-bg: #2a2a2a;
+  --switch-bg: #555555;
+  --btn-active: #333333;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+.container {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 500px;
+  width: 100%;
+  padding: 30px;
+  transition: background-color 0.3s;
+}
+h1 {
+  text-align: center;
+  color: var(--primary);
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+.form-group {
+  margin-bottom: 20px;
+}
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+/* Input styling */
+input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: var(--card-bg);
+  color: var(--text);
+  transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+}
+input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Range Slider Custom CSS */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  outline: none;
+  padding: 0;
+  border: none;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.hydration-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#hydrationVal {
+  color: var(--primary);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Dynamic Helper Text */
+.help-text {
+  font-size: 0.85rem;
+  color: var(--help-text);
+  text-align: center;
+  margin-top: 8px;
+  font-style: italic;
+  min-height: 40px;
+}
+
+/* Plus/Minus Button Styling */
+.quantity-wrapper {
+  display: flex;
+  gap: 10px;
+}
+.qty-btn {
+  background-color: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 60px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: background-color 0.1s, color 0.3s;
+}
+.qty-btn:active {
+  background-color: var(--btn-active);
+}
+.quantity-wrapper input {
+  text-align: center;
+}
+
+.recipe-section {
+  margin-top: 25px;
+  background: var(--recipe-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+.recipe-section h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 8px;
+  color: var(--text);
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+}
+li:last-child {
+  border-bottom: none;
+}
+.totals {
+  background: var(--totals-bg);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+.totals li {
+  font-weight: bold;
+  border-bottom: none;
+  padding: 4px 0;
+}
+.weight {
+  color: var(--primary);
+  font-weight: bold;
+}
+.empty-state {
+  text-align: center;
+  color: var(--help-text);
+  margin-top: 30px;
+  font-style: italic;
+}
+
+/* Copy Button Styling */
+.copy-btn {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.copy-btn:active {
+  opacity: 0.8;
+}
+
+/* Settings and Toggle Switch CSS */
+.settings-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+}
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toggle-container label {
+  margin-bottom: 0;
+  cursor: pointer;
+  font-weight: normal;
+  font-size: 0.95rem; /* Slightly smaller to ensure they fit side-by-side on small phone screens */
+}
+.toggle-container:last-child {
+  margin-bottom: 0;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--switch-bg);
+  transition: .4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: var(--primary);
+}
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
