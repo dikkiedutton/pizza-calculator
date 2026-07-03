@@ -44,7 +44,7 @@
     margin-bottom: 8px;
     color: #555;
   }
-  select, input {
+  select, input[type="number"] {
     width: 100%;
     padding: 12px;
     border: 1px solid var(--border);
@@ -53,7 +53,7 @@
     box-sizing: border-box;
     transition: border-color 0.2s;
   }
-  select:focus, input:focus {
+  select:focus, input[type="number"]:focus {
     outline: none;
     border-color: var(--primary);
   }
@@ -100,6 +100,62 @@
     color: var(--primary);
     font-weight: bold;
   }
+  .empty-state {
+    text-align: center;
+    color: #777;
+    margin-top: 30px;
+    font-style: italic;
+  }
+  
+  /* Toggle Switch CSS */
+  .wake-lock-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid var(--border);
+  }
+  .wake-lock-container label {
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  input:checked + .slider {
+    background-color: var(--primary);
+  }
+  input:checked + .slider:before {
+    transform: translateX(22px);
+  }
 </style>
 </head>
 <body>
@@ -108,16 +164,24 @@
   <h1>Pizza dough calculator</h1>
   
   <div class="form-group">
-    <label for="recipeType">Select recipe</label>
+    <label for="recipeType">Select Recipe</label>
     <select id="recipeType" onchange="calculate()">
-      <option value="58">250g balls (58% hydration)</option>
-      <option value="67">250g balls (67% hydration)</option>
+      <option value="58">250g Balls (58% Hydration)</option>
+      <option value="67">250g Balls (67% Hydration)</option>
     </select>
   </div>
 
   <div class="form-group">
     <label for="numPizzas">Quantity of pizzas</label>
-    <input type="number" id="numPizzas" value="6" min="1" oninput="calculate()">
+    <input type="number" id="numPizzas" placeholder="How many pizzas would you like to cook?" min="1" oninput="calculate()">
+  </div>
+
+  <div class="wake-lock-container">
+    <label for="wakeLockToggle">Keep screen on</label>
+    <label class="switch">
+      <input type="checkbox" id="wakeLockToggle" onchange="toggleWakeLock()">
+      <span class="slider"></span>
+    </label>
   </div>
 
   <div id="results">
@@ -126,7 +190,6 @@
 </div>
 
 <script>
-  // Base per-pizza values extracted from the spreadsheet for 250g balls
   const recipes = {
     "58": {
       poolish: { water: 39, flour: 39 },
@@ -142,8 +205,10 @@
     const type = document.getElementById('recipeType').value;
     let num = parseInt(document.getElementById('numPizzas').value);
     
+    // If the input is empty or invalid, clear the recipe and show a prompt
     if (isNaN(num) || num < 1) {
-      num = 1; 
+      document.getElementById('results').innerHTML = '<p class="empty-state">Please enter a number above to see your recipe.</p>';
+      return; 
     }
 
     const rec = recipes[type];
@@ -152,19 +217,15 @@
     const pWater = Math.round(rec.poolish.water * num);
     const pFlour = Math.round(rec.poolish.flour * num);
     
-    // Yeast logic: 1-9 = 5g, 10-19 = 10g... (Special case: 2g for 1 pizza)
     let pYeast = 5;
     if (num === 1) {
       pYeast = 2;
     } else {
-      pYeast = Math.floor((num - 1) / 9) * 5; 
-      // Simplified to match standard tiers: 1-9 (5g), 10-19 (10g)
       if (num < 10) pYeast = 5;
       else if (num < 20) pYeast = 10;
-      else pYeast = 15; // Extrapolating just in case
+      else pYeast = 15; 
     }
 
-    // Honey logic: 2g for 1 pizza, otherwise flat 5g batch standard
     let pHoney = (num === 1) ? 2 : 5;
 
     // Calculate Dough
@@ -212,7 +273,47 @@
     document.getElementById('results').innerHTML = html;
   }
 
-  // Run calculation on load
+  // --- Screen Wake Lock Logic ---
+  let wakeLock = null;
+
+  async function toggleWakeLock() {
+    const toggle = document.getElementById('wakeLockToggle');
+    
+    if (toggle.checked) {
+      if ('wakeLock' in navigator) {
+        try {
+          wakeLock = await navigator.wakeLock.request('screen');
+        } catch (err) {
+          alert("Your browser blocked the Wake Lock feature. Make sure you're viewing this on a secure connection (HTTPS).");
+          toggle.checked = false;
+        }
+      } else {
+        alert("Your browser doesn't support the Screen Wake Lock API.");
+        toggle.checked = false;
+      }
+    } else {
+      if (wakeLock !== null) {
+        wakeLock.release().then(() => {
+          wakeLock = null;
+        });
+      }
+    }
+  }
+
+  document.addEventListener('visibilitychange', async () => {
+    if (wakeLock !== null && document.visibilityState === 'visible') {
+      const toggle = document.getElementById('wakeLockToggle');
+      if (toggle.checked) {
+        try {
+          wakeLock = await navigator.wakeLock.request('screen');
+        } catch (err) {
+          console.error("Could not re-acquire wake lock.");
+        }
+      }
+    }
+  });
+
+  // Run calculation on load (will show the empty state message)
   calculate();
 </script>
 
