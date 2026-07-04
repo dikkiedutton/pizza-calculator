@@ -4,8 +4,68 @@ let currentDough = 'poolish'; // Default state
 
 // Run initialization when the page loads
 document.addEventListener('DOMContentLoaded', () => {
+  loadSettings();
   updateHydration();
 });
+
+// --- Memory & Settings Logic ---
+function loadSettings() {
+  const savedQty = localStorage.getItem('pizzaQty');
+  const savedHydration = localStorage.getItem('pizzaHydration');
+  const savedDough = localStorage.getItem('doughType');
+  const savedTheme = localStorage.getItem('theme');
+
+  // Load dough type
+  if (savedDough) {
+    currentDough = savedDough;
+    
+    document.querySelectorAll('.dough-btn').forEach(btn => btn.classList.remove('active'));
+    if (currentDough === 'poolish') {
+      document.getElementById('btnPoolish').classList.add('active');
+      document.getElementById('poolishMethod').style.display = 'block';
+      document.getElementById('sameDayMethod').style.display = 'none';
+    } else {
+      document.getElementById('btnSameDay').classList.add('active');
+      document.getElementById('poolishMethod').style.display = 'none';
+      document.getElementById('sameDayMethod').style.display = 'block';
+    }
+  }
+
+  // Load inputs
+  if (savedQty) { document.getElementById('numPizzas').value = savedQty; }
+  if (savedHydration) { document.getElementById('hydrationSlider').value = savedHydration; }
+
+  // Load theme
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('darkModeToggle').checked = true;
+  }
+}
+
+function saveSettings() {
+  const qty = document.getElementById('numPizzas').value;
+  const hydration = document.getElementById('hydrationSlider').value;
+  
+  localStorage.setItem('pizzaQty', qty);
+  localStorage.setItem('pizzaHydration', hydration);
+  localStorage.setItem('doughType', currentDough);
+}
+
+function resetSettings() {
+  // Trigger native confirmation dialog
+  if (confirm("Are you sure you want to reset the calculator back to its default state?")) {
+    // Clear everything except Dark Mode preference
+    localStorage.removeItem('pizzaQty');
+    localStorage.removeItem('pizzaHydration');
+    localStorage.removeItem('doughType');
+    
+    // Clear the input field
+    document.getElementById('numPizzas').value = '';
+    
+    // Reset to defaults
+    setDoughType('poolish'); 
+  }
+}
 
 // --- Navigation Logic ---
 function switchTab(tabId) {
@@ -33,7 +93,7 @@ function setDoughType(type) {
     document.getElementById('sameDayMethod').style.display = 'block';
   }
   
-  // Recalculate and update helper text
+  saveSettings();
   updateHydration();
 }
 
@@ -42,8 +102,10 @@ function toggleDarkMode() {
   const toggle = document.getElementById('darkModeToggle');
   if (toggle.checked) {
     document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
   } else {
     document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('theme', 'light');
   }
 }
 
@@ -97,6 +159,8 @@ function adjustQty(change) {
 function calculate() {
   let num = parseInt(document.getElementById('numPizzas').value);
   let targetHydration = parseInt(document.getElementById('hydrationSlider').value) / 100;
+  
+  saveSettings();
   
   if (isNaN(num) || num < 1) {
     document.getElementById('results').innerHTML = '<p class="empty-state">Please enter a number above to see your recipe.</p>';
@@ -173,7 +237,6 @@ function calculate() {
 
   } else {
     // SAME DAY MATH
-    // Authentic Neapolitan uses very little yeast for a long room temp proof (~0.5g per pizza)
     const sdYeast = (num * 0.5).toFixed(1); 
     const totalWeight = totalWater + totalFlour + dSalt + parseFloat(sdYeast);
 

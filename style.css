@@ -359,3 +359,21 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(22px);
 }
+/* Reset Button Styling */
+.reset-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.reset-btn:active {
+  background-color: var(--primary);
+  color: white;
+}
